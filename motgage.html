@@ -1,0 +1,91 @@
+
+                    <template>
+                      <lightning-card title="Mortgage Calculator" icon-name="action:refresh">
+
+                        <div class="slds-box">
+                            <img src={mortgageImg}> </div>
+
+                          <div class="slds-grid slds-gutters"> 
+                    <div class="slds-col slds-size_2-of-6">
+                          <div class="slds-var-m-around_medium">
+                              <lightning-input type="number" name="MortAmount" label="Mortgage Amount:($)" placeholder="e.g. $10000"
+                                  required onchange={onChangeAmount}>
+                              </lightning-input>
+                          </div>
+                          <div class="slds-var-m-around_medium">
+                              <lightning-input type="number" step="any" name="Rate" label="Interest Rate:(%)" placeholder="e.g. 2.5%" required
+                                  onchange={onChangeInterest}>
+                              </lightning-input>
+                          </div>
+                          <div class="slds-var-m-around_medium">
+                              <lightning-input type="number" name="Amort" label="Amortization:(years)" placeholder="e.g. 2 years" required
+                                  onchange={onChangeAmort}>
+                              </lightning-input>
+                          </div>
+                          <div class="slds-var-m-around_medium">
+                              <lightning-combobox options={options} placeholder="Select Frequency" label="Payment Frequency:" required
+                                  onchange={comboboxHandler}>
+                              </lightning-combobox>
+                          </div>
+                          <div>
+                              <lightning-button label="Get the Result!" variant="Neutral" onclick={getResultHandler}
+                                  class="slds-m-left_x-small">
+                              </lightning-button>
+                  
+                              <lightning-button label="Save the Result!" variant="Neutral" onclick={saveResultHandler}
+                                  class="slds-m-left_x-small">
+                              </lightning-button>
+                          </div>
+                      </div>
+                          <div class="slds-col slds-size_4-of-6">
+                              <!-- Placing child component and passing values -->
+                              <template if:true={chartConfiguration}>
+                                  <c-chart chart-config={chartConfiguration}></c-chart>
+                              </template>
+                          </div>
+                      </div>
+                          <template if:true={show}>
+                              <div class="slds-var-m-around_large">
+                              <p>Overall Payment:   <strong>{result.yearlyPayment}$</strong></p> 
+                              <p>{result.partialPmtType}:   <strong>{result.partialAmount}$</strong></p> 
+                              </div>
+                            
+                          </template>    
+                      </lightning-card>
+                      <div class="slds-m-top_medium">
+                          <lightning-card>
+                              <div class="slds-grid slds-gutters slds-wrap slds-var-p-horizontal_large">
+                                  <template if:true={getMortgageRecord.data}>
+                                      <template for:each={getMortgageRecord.data} for:item="record">
+                                          <div class="block slds-col slds-m-vertical_medium slds-medium-size_4-of-12 slds-large-size_3-of-12"
+                                              key={record.id}>
+                                              <div class="slds-box"
+                                                  style="border-radius: 5pt; box-shadow: 5px 5px 5px rgb(194, 193, 193)">
+                                                  <div class="slds-text-heading_medium"><strong>{record.Name}</strong></div>
+                                                  <div class="slds-text-heading_small">Mortgage Amount: <strong
+                                                          style="color: rgb(128, 115, 0)">${record.Mortgage_amount__c}</strong></div>
+                                                  <div class="slds-text-heading_small">Interest Rate: <strong
+                                                          style="color: rgb(241, 47, 21)">{record.Interest_rate__c}%</strong></div>
+                                                  <div class="slds-text-heading_small">Amortization: <strong
+                                                          style="color: rgb(159, 21, 172)">{record.Amortization__c} years</strong></div>
+                                                  <div class="slds-text-heading_small"> Payment <strong style="color: green">
+                                                          ${record.Partial_payment__c} {record.Payment_frequency__c}</strong></div>
+                                                  <div class="slds-text-heading_small">Overall Payment: <strong style="color: green">$
+                                                          {record.Total_amount__c}</strong></div>
+                                                  <div class="slds-align_absolute-center slds-var-p-around_medium">
+                                                      <lightning-button-group>
+                                                          <lightning-button label="Visit" icon-name="action:following"
+                                                              onclick={onVisitHandler}></lightning-button>
+                                                          <lightning-button label="Delete" value={record.id} icon-name="action:delete"
+                                                              onclick={onDeleteHandler}></lightning-button>
+                                                      </lightning-button-group>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </template>
+                                  </template>
+                              </div>
+                          </lightning-card>
+                      </div>
+                  </template>
+                  
