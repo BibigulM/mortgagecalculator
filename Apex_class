@@ -1,0 +1,35 @@
+public class mortgageHistoryController {
+    @AuraEnabled(cacheable=false)
+    public static String createMortHistory (Decimal amount, 
+                                            Decimal rate, 
+                                            Integer amortization, 
+                                            String paymentFreq,
+                                            Decimal partialPmt,
+                                            Decimal totalPmt){
+       
+        Mortgage_History_Records__c newMortgageHist = new Mortgage_History_Records__c();
+        newMortgageHist.Mortgage_amount__c =  amount;
+        newMortgageHist.Interest_rate__c =  rate;
+        newMortgageHist.Amortization__c =  amortization;
+        newMortgageHist.Payment_frequency__c =  paymentFreq;
+        newMortgageHist.Partial_payment__c =  partialPmt;
+        newMortgageHist.Total_amount__c =  totalPmt; 
+        system.debug('the new record: '+newMortgageHist);
+        insert newMortgageHist;
+                                                
+        String result = newMortgageHist.id;
+        return result;
+    }
+    @AuraEnabled(cacheable=true)
+    public static list<Mortgage_History_Records__c> getRecords(){
+        list<Mortgage_History_Records__c> mortgageRecords = [Select Name, 
+                                                             Mortgage_amount__c, 
+                                                             Interest_rate__c, 
+                                                             Amortization__c, 
+                                                             Payment_frequency__c, 
+                                                             Partial_payment__c, 
+                                                             Total_amount__c 
+                                                             From Mortgage_History_Records__c];  
+        return mortgageRecords;
+    }   
+}
